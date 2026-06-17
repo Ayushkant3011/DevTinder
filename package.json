@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/Ayushkant3011/DevTinder/issues"
   },
-  "homepage": "https://github.com/Ayushkant3011/DevTinder#readme"
+  "homepage": "https://github.com/Ayushkant3011/DevTinder#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
