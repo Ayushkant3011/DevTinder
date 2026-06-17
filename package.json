@@ -1,0 +1,23 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "Tinder for Devs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ayushkant3011/DevTinder.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "JavaScript"
+  ],
+  "author": "Ayush Kant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ayushkant3011/DevTinder/issues"
+  },
+  "homepage": "https://github.com/Ayushkant3011/DevTinder#readme"
+}
