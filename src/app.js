@@ -3,16 +3,10 @@ const express = require("express");
 const app = express();
 
 
-app.use("/home",(req,res)=>{
-    res.send("Hello from the Home !");
+app.get("/user", (req, res) => {
+    console.log(req.query);
+    res.send({"firstName": "Ayush"});
 });
-
-
-
-app.use("/test",(req,res)=>{
-    res.send("Hello from the server !");
-});
-
 
 
 app.use("/",(req,res)=>{
