@@ -5,21 +5,24 @@ const { adminAuth, userAuth } = require("./middlewares/auth")
 
 
 const {connectDB} = require("./config/database");
+const User = require("./models/user");
 
 
+app.post("/signup", async (req,res) => {
+    
+    //creating a new instance of the User model
+    const user = new User({
+        firstName : "Ayush",
+        lastName : "Kant",
+        emailId : "ayushkant@gmail.com",
+        password : "ayush@123"
+    });
 
-app.get("/admin", adminAuth);
 
-app.get("/user/:userId", userAuth, (req, res) => {
-    console.log(req.params);
-    res.send({"firstName": "Ayush"});
+    await user.save();
+
+    res.send("User Created");
 });
-
-
-app.use("/",(req,res)=>{
-    res.send("Hello from the Dashboard !");
-});
-
 
 // this is a good way to first connect to db and then listen to server
 connectDB()
