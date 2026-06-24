@@ -4,7 +4,7 @@ const app = express();
 const { adminAuth, userAuth } = require("./middlewares/auth")
 
 
-require("./config/database");
+const {connectDB} = require("./config/database");
 
 
 
@@ -21,6 +21,14 @@ app.use("/",(req,res)=>{
 });
 
 
-app.listen(3000, ()=>{
-    console.log("Server is running");
-});
+// this is a good way to first connect to db and then listen to server
+connectDB()
+    .then(() => {
+        console.log("Db Connected Successfully");
+
+        app.listen(3011, ()=>{
+            console.log("Server is running and listening on 3011......");
+        });
+    }).catch((err) =>{
+        console.log("DB connection Failed!!!!!");
+    });
