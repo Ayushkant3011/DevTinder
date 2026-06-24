@@ -19,9 +19,13 @@ app.post("/signup", async (req,res) => {
     });
 
 
-    await user.save();
+    try{
+        await user.save();
 
-    res.send("User Created");
+        res.send("User Created");
+    }catch(err){
+        res.status(400).send("Error creating user: " + err.message);
+    }
 });
 
 // this is a good way to first connect to db and then listen to server
