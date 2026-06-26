@@ -33,6 +33,30 @@ app.post("/signup", async (req,res) => {
     }
 });
 
+// get user by email 
+app.get("/user", async (req, res) =>{
+    try{
+        const users = await User.find({emailId : req.body.emailId});
+
+        if(users.length === 0) res.status(404).send("User not Found");
+        else res.send(users);
+    }
+    catch(err){
+        res.status(400).send("Something went wrong")
+    }
+});
+
+
+// Feed API
+app.get("/feed", async (req, res) => {
+    try{
+        const users = await User.find({});
+        res.send(users);
+    }catch(err){
+        res.status(400).send("Something went wrong");
+    }
+});
+
 // this is a good way to first connect to db and then listen to server
 connectDB()
     .then(() => {
