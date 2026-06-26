@@ -57,6 +57,21 @@ app.get("/feed", async (req, res) => {
     }
 });
 
+
+// Delete user
+app.delete("/user", async (req, res)=>{
+    const userId = req.body.emailId;
+
+    try{
+        const user = await User.findOneAndDelete(userId); // findOneAndDelete({ _id : userId })
+
+        res.send("User deleted");
+    }
+    catch(err){
+        res.status(400).send("Something went wrong");
+    }
+});
+
 // this is a good way to first connect to db and then listen to server
 connectDB()
     .then(() => {
