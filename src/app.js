@@ -72,6 +72,23 @@ app.delete("/user", async (req, res)=>{
     }
 });
 
+
+
+// Update the user
+app.patch("/user", async (req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    
+    try{
+        await User.findByIdAndUpdate({_id: userId}, data);
+
+        res.send("User Updated successfully");
+    }catch(err){
+        res.status(400).send("Something went wrong");
+    }
+});
+
+
 // this is a good way to first connect to db and then listen to server
 connectDB()
     .then(() => {
