@@ -3,21 +3,38 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     firstName : {
         type:String,
+        required: true
     },
     lastName:{
         type: String,
     },
     emailId:{
-        type:String
+        type:String,
+        lowercase: true,
+        required: true,
+        unique: true,
+        trim: true
     },
     password:{
-        type: String
+        type: String,
+        required: true
     },
     age:{
         type: Number
     },
     gender : {
         type: String
+    },
+    photoUrl:{
+        type: String,
+        default: "https://png.pngtree.com/png-vector/20250512/ourmid/pngtree-default-avatar-profile-icon-gray-placeholder-vector-png-image_16213764.png"
+    },
+    about:{
+        type:String,
+        default:"This is default about of the user!!"
+    },
+    skills:{
+        type: [String]
     }
 });
 
