@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     age:{
-        type: Number
+        type: Number,
+        min:18,
     },
     gender : {
         type: String
@@ -36,7 +37,11 @@ const userSchema = new mongoose.Schema({
     skills:{
         type: [String]
     }
-});
+},
+{
+    timestamps: true
+}
+);
 
 
 module.exports = mongoose.model("User", userSchema);
