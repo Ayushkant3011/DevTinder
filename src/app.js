@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const { adminAuth, userAuth } = require("./middlewares/auth")
@@ -14,19 +15,28 @@ app.use(express.json());
 
 app.post("/signup", async (req,res) => {
     try{
-    // Before checking anything first validate the data
-    validateSignUpData(req);
+        // Before checking anything first validate the data
+        validateSignUpData(req);
+        
+        // Before saving anything Encrypt the password
+        const {password} = req.body;
+        const hashPassword = await bcrypt.hash(password, 10)
 
+        // USing data dynamically and taking from the request body
+        // const user = new User(req.body); // this is a bad way to store the data 
+        const user = new User({
+            firstName,
+            lastName,
+            emailId,
+            password: hashPassword,
+        });
 
-    // USing data dynamically and taking from the request body
-    const user = new User(req.body);
-
-    
+        
         await user.save();
 
         res.send("User Created");
     }catch(err){
-        res.status(400).send("Error creating user: " + err.message);
+        res.status(400).send("ERROR :" + err.message);
     }
 });
 
