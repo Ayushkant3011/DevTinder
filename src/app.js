@@ -40,6 +40,25 @@ app.post("/signup", async (req,res) => {
     }
 });
 
+app.post("/login", async (req, res) => {
+    try{
+        const {emailId, password} = req.body;
+
+        if(!validator.isEmail(emailId)) throw new Error("Email not Valid!!");
+
+        const user = await User.findOne({emailId: emailId});
+        if(!user) throw new Error ("Invalid Credentials");
+
+        const isPassowordValid = await bcrypt.compare(paassword, user.password);
+
+        if(isPassowordValid) res.send("Login Succes !!!!");
+        else throw new Error("Invalid Credentials");
+
+    }catch(err){
+        res.status(400).send("ERROR : " + err.message);
+    }
+});
+
 // get user by email 
 app.get("/user", async (req, res) =>{
     try{
