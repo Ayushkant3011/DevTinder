@@ -8,23 +8,20 @@ const {connectDB} = require("./config/database");
 const User = require("./models/user");
 
 
+const {validateSignUpData} = require("./utils/validation");
+
 app.use(express.json());
 
 app.post("/signup", async (req,res) => {
-    
-    //creating a new instance of the User model
-    // const user = new User({
-    //     firstName : "Ayush",
-    //     lastName : "Kant",
-    //     emailId : "ayushkant@gmail.com",
-    //     password : "ayush@123"
-    // });
+    try{
+    // Before checking anything first validate the data
+    validateSignUpData(req);
 
 
     // USing data dynamically and taking from the request body
     const user = new User(req.body);
 
-    try{
+    
         await user.save();
 
         res.send("User Created");
