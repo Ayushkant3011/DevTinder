@@ -7,7 +7,7 @@ const { adminAuth, userAuth } = require("./middlewares/auth")
 
 const {connectDB} = require("./config/database");
 const User = require("./models/user");
-
+const validator = require("validator");
 
 const {validateSignUpData} = require("./utils/validation");
 
@@ -19,7 +19,10 @@ app.post("/signup", async (req,res) => {
         validateSignUpData(req);
         
         // Before saving anything Encrypt the password
-        const {password} = req.body;
+        const {firstName,
+            lastName,
+            emailId,
+            password} = req.body;
         const hashPassword = await bcrypt.hash(password, 10)
 
         // USing data dynamically and taking from the request body
@@ -49,14 +52,30 @@ app.post("/login", async (req, res) => {
         const user = await User.findOne({emailId: emailId});
         if(!user) throw new Error ("Invalid Credentials");
 
-        const isPassowordValid = await bcrypt.compare(paassword, user.password);
+        const isPassowordValid = await bcrypt.compare(password, user.password);
 
-        if(isPassowordValid) res.send("Login Succes !!!!");
+        if(isPassowordValid){
+        
+            // create a JWT Token
+
+            // Add the Token to the cookie and send the response back to user
+        
+            res.cookie("token", "fjshfglhaurhohouhuofhg");
+            res.send("Login Succes !!!!");
+        }
         else throw new Error("Invalid Credentials");
 
     }catch(err){
         res.status(400).send("ERROR : " + err.message);
     }
+});
+
+
+// Profile
+app.get("profile", async (req, res) =>{
+    const cookies = req.cookies();
+
+    console.log(cookies);
 });
 
 // get user by email 
