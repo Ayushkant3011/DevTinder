@@ -8,10 +8,13 @@ const { adminAuth, userAuth } = require("./middlewares/auth")
 const {connectDB} = require("./config/database");
 const User = require("./models/user");
 const validator = require("validator");
+const cookieParser = require("cookie-parser");0
 
 const {validateSignUpData} = require("./utils/validation");
 
 app.use(express.json());
+app.use(cookieParser());
+
 
 app.post("/signup", async (req,res) => {
     try{
@@ -72,10 +75,11 @@ app.post("/login", async (req, res) => {
 
 
 // Profile
-app.get("profile", async (req, res) =>{
-    const cookies = req.cookies();
+app.get("/profile", async (req, res) =>{
+    const cookies = req.cookies;
 
     console.log(cookies);
+    res.send("Reading cookie");
 });
 
 // get user by email 
