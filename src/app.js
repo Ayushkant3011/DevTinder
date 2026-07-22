@@ -63,7 +63,7 @@ app.post("/login", async (req, res) => {
         
             // create a JWT Token
             const token = await jwt.sign({_id: user._id}, "DEV@Tinder$790");
-            console.log(token);
+            
 
             // Add the Token to the cookie and send the response back to user
         
@@ -89,14 +89,12 @@ app.get("/profile", async (req, res) =>{
           
         // verify the token
         const decodedMessage = await jwt.verify(token, "DEV@Tinder$790");
-        console.log(decodedMessage);
+      
         const{ _id } = decodedMessage;
 
-        console.log("Logged in user is " + _id);
 
         const user = await User.findById(_id);
 
-        // console.log(cookies);
         res.send(user);
     }
     catch(err){
