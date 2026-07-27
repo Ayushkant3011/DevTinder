@@ -2,9 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 
 const app = express();
-const { adminAuth, userAuth } = require("./middlewares/auth")
 
-
+const { userAuth } = require("./middlewares/auth");
 const {connectDB} = require("./config/database");
 const User = require("./models/user");
 const validator = require("validator");
@@ -79,22 +78,9 @@ app.post("/login", async (req, res) => {
 
 
 // Profile
-app.get("/profile", async (req, res) =>{
+app.get("/profile", userAuth, async (req, res) =>{
     try{
-        const cookies = req.cookies;
-
-        const { token } = cookies;
-
-        if(!token) throw new Error ("Invalid Token"); 
-          
-        // verify the token
-        const decodedMessage = await jwt.verify(token, "DEV@Tinder$790");
-      
-        const{ _id } = decodedMessage;
-
-
-        const user = await User.findById(_id);
-
+        const user = req.user;
         res.send(user);
     }
     catch(err){
