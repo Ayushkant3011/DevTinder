@@ -61,12 +61,16 @@ app.post("/login", async (req, res) => {
         if(isPassowordValid){
         
             // create a JWT Token
-            const token = await jwt.sign({_id: user._id}, "DEV@Tinder$790");
+            const token = await jwt.sign({_id: user._id}, "DEV@Tinder$790", {
+                expiresIn : "7d",
+            });
             
 
             // Add the Token to the cookie and send the response back to user
         
-            res.cookie("token", token);
+            res.cookie("token", token, {
+                expires: new Date(Date.now() + 8 * 3600000),
+            });
             res.send("Login Succes !!!!");
         }
         else throw new Error("Invalid Credentials");
@@ -88,78 +92,12 @@ app.get("/profile", userAuth, async (req, res) =>{
     }
 });
 
-// get user by email 
-app.get("/user", async (req, res) =>{
-    try{
-        const users = await User.find({emailId : req.body.emailId});
+app.post("/sendRequest", userAuth, async (req, res) =>{
+    const user = req.user;
+    console.log("Sending connection request");
 
-        if(users.length === 0) res.status(404).send("User not Found");
-        else res.send(users);
-    }
-    catch(err){
-        res.status(400).send("Something went wrong")
-    }
+    res.send(user.firstName + " Sent Connection Request !");
 });
-
-
-// Feed API
-app.get("/feed", async (req, res) => {
-    try{
-        const users = await User.find({});
-        res.send(users);
-    }catch(err){
-        res.status(400).send("Something went wrong");
-    }
-});
-
-
-// Delete user
-app.delete("/user", async (req, res)=>{
-    const userId = req.body.emailId;
-
-    try{
-        const user = await User.findOneAndDelete(userId); // findOneAndDelete({ _id : userId })
-
-        res.send("User deleted");
-    }
-    catch(err){
-        res.status(400).send("Something went wrong");
-    }
-});
-
-
-
-// Update the user
-app.patch("/user/:userId", async (req, res) => {
-    const userId = req.params?.userId;
-    const data = req.body;
-    
-    try{
-
-        const ALLOWED_UPDATES = [
-            "photoUrl",
-            "about",
-            "gender",
-            "age",
-            "skills",
-        ];
-
-        const isUpdateAllowed = Object.keys(data).every((k) =>{
-            ALLOWED_UPDATES.includes(k);
-        });
-
-        if(!isUpdateAllowed) throw new Error("Update not allowed");
-
-        if(data?.skills.length > 10) throw new Error("Skills cannot be more than 10");
-
-        await User.findByIdAndUpdate({_id: userId}, data);
-
-        res.send("User Updated successfully");
-    }catch(err){
-        res.status(400).send("Something went wrong");
-    }
-});
-
 
 // this is a good way to first connect to db and then listen to server
 connectDB()
