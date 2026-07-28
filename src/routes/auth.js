@@ -1,6 +1,9 @@
 const express = require("express");
 const authRouter = express.Router();
-
+const {validateSignUpData} = require("../utils/validation");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
 
 authRouter.post("/signup", async (req,res) => {
     try{
@@ -34,6 +37,37 @@ authRouter.post("/signup", async (req,res) => {
 
 
 
+
+authRouter.post("/login", async (req, res) => {
+    try{
+        const {emailId, password} = req.body;
+
+        if(!validator.isEmail(emailId)) throw new Error("Email not Valid!!");
+
+        const user = await User.findOne({emailId: emailId});
+        if(!user) throw new Error ("Invalid Credentials");
+
+        const isPassowordValid = await user.validatePass(password);
+
+        if(isPassowordValid){
+        
+            // create a JWT Token
+            const token = await user.getJWT();
+            
+
+            // Add the Token to the cookie and send the response back to user
+        
+            res.cookie("token", token, {
+                expires: new Date(Date.now() + 8 * 3600000),
+            });
+            res.send("Login Succes !!!!");
+        }
+        else throw new Error("Invalid Credentials");
+
+    }catch(err){
+        res.status(400).send("ERROR : " + err.message);
+    }
+});
 
 
 
