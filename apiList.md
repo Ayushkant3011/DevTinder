@@ -15,8 +15,10 @@
 <!-- - POST /request/send/interested/:userId //making it dynamic -->
 - POST /request/send/:status/:userId //making it dynamic
 <!-- - POST /request/send/ignored/:userId -->
-- POST /request/review/accepted/:requestId
-- POST /request/review/rejected/:requestId
+
+<!-- - POST /request/review/accepted/:requestId -->
+- POST /request/review/:status/:requestId // Making it dynamic
+<!-- - POST /request/review/rejected/:requestId -->
 
 ### userRouter
 - GET /user/connections
