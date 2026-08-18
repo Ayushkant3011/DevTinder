@@ -4,7 +4,7 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 const userRouter = express.Router();
 
-const USER_SAFE_DATA = "firstName  LastName photoUrl age gender about skills"
+const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills"
 
 
 // Get all the pending connection request for the loggedIn user
@@ -75,13 +75,13 @@ userRouter.get("/feed", userAuth, async(req,res)=>{
         const connectionRequest = await ConnectionRequest.find({
             $or:[
                 {fromUserId: loggedInUser._id}, 
-                {toUserid: loggedInUser._id}
+                {toUserId: loggedInUser._id}
             ]
         }).select("fromUserId toUserId");
 
         const hideUsersFromFeed = new Set();
 
-        connectionRequest.forEach(request => {
+        connectionRequest.forEach(req => {
             hideUsersFromFeed.add(req.fromUserId.toString());
             hideUsersFromFeed.add(req.toUserId.toString());
         });

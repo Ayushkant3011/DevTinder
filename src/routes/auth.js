@@ -4,6 +4,7 @@ const {validateSignUpData} = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const mongoose = require("mongoose");
 
 authRouter.post("/signup", async (req,res) => {
     try{
@@ -27,9 +28,9 @@ authRouter.post("/signup", async (req,res) => {
         });
 
         
-        await user.save();
+        const savedUser = await user.save();
 
-        res.send("User Created");
+        res.json({ message: "User Added successfully!", data: savedUser });
     }catch(err){
         res.status(400).send("ERROR :" + err.message);
     }
