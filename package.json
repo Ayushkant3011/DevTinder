@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Ayushkant3011/DevTinder#readme",
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.1119.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
