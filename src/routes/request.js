@@ -5,6 +5,7 @@ const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
+const sendEmail = require("../utils/sendEmail");
 
 requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res) =>{
     try{
@@ -48,6 +49,11 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
 
         const requestData = await connectionRequest.save();
 
+        // below code is used to send email to the user whenever a request is sent to them 
+        // so this sendEmail is using AWS SES to send email 
+        // I dont have domain name and SES thats why it'll not work
+        // const emailRes = await sendEmail.run();
+        // console.log(emailRes);
 
         res.json({
             message: req.user.firstName + " is " + status + " in " + toUser.firstName,
