@@ -3,17 +3,17 @@ const { userAuth } = require("../middlewares/auth");
 const paymentRouter = express.Router();
 const razorpayInstance = require("../utils/razorpay");
 const Payment = require("../models/payment");
-
+const membershipAmount = require("../utils/constants");
 paymentRouter.post("/payment/create", userAuth, async(req,res) =>{
     try{
         const { membershipType } = req.body;
         const { firstName, lastName, emailId} = req.user;
 
         const order = await razorpayInstance.orders.create({
-            "amount": 50000,
-            "currency": "INR",
-            "receipt": "receipt#1",
-            "notes": {
+            amount: membershipAmount[membershipType] * 10,
+            currency: "INR",
+            receipt: "receipt#1",
+            notes: {
                 firstName,
                 lastName,
                 emailId,
