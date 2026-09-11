@@ -37,7 +37,7 @@ paymentRouter.post("/payment/create", userAuth, async(req,res) =>{
         const savePayment = await payment.save();
 
         // Return back the order details to frontend
-        res.json({ ...savePayment.toJSON() });
+        res.json({ ...savePayment.toJSON(), keyId: process.env.RAZORPAY_KEY_ID});
     }
     catch(err){
         console.log(err);
