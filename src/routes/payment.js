@@ -6,14 +6,18 @@ const Payment = require("../models/payment");
 
 paymentRouter.post("/payment/create", userAuth, async(req,res) =>{
     try{
+        const { membershipType } = req.body;
+        const { firstName, lastName, emailId} = req.user;
+
         const order = await razorpayInstance.orders.create({
             "amount": 50000,
             "currency": "INR",
             "receipt": "receipt#1",
             "notes": {
-                "firstName": "value3",
-                "lastName": "value2",
-                "membershipType": "Gold",
+                firstName,
+                lastName,
+                emailId,
+                membershipType: membershipType,
             },
         });
 
