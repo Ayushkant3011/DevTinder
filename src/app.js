@@ -43,7 +43,7 @@ connectDB()
     .then(() => {
         console.log("Db Connected Successfully");
 
-        app.listen(process.env.PORT, ()=>{
+        app.listen(PORT, "0.0.0.0", ()=>{
             console.log(`Server is running and listening on ${PORT}`);
         });
     }).catch((err) =>{
