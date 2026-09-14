@@ -3,6 +3,7 @@ const { userAuth } = require("../middlewares/auth");
 const paymentRouter = express.Router();
 const razorpayInstance = require("../utils/razorpay");
 const Payment = require("../models/payment");
+const User = require("../models/user");
 const {membershipAmount} = require("../utils/constants");
 const {validateWebhookSignature} = require('razorpay/dist/utils/razorpay-utils')
 
@@ -69,14 +70,21 @@ paymentRouter.post("/payment/webHook", async(req, res)=>{
         payment.status = paymentDetails.status;
         await payment.save();
 
+        const user = await User.findOne({ _id: payment.userId });
+        user.isPremium = true;
+        user.membershipType = payment.notes.membershipType;
+
+        await user.save();
+
+
         // Update the user as premium
         // return success response to razorpay
-        if(req.body.event == "payment.captured"){
+        // if(req.body.event == "payment.captured"){
 
-        }
-        if(req.body.event == "payment.failed"){
+        // }
+        // if(req.body.event == "payment.failed"){
 
-        }
+        // }
         
         return res.status(200).json({message: "Webhook received successfully!"});
     }
