@@ -1,9 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const imageRouter = express.Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { userAuth } = require('../middlewares/auth'); // your existing auth middleware
 const User = require('../models/user');
+const ConnectionRequestModel = require("../models/connectionRequest");
 
 // Configure Cloudinary (put keys in .env)
 cloudinary.config({
@@ -73,5 +75,59 @@ imageRouter.post('/images/upload', userAuth, upload.single('image'), async (req,
 //     res.status(500).json({ error: 'Delete failed' });
 //   }
 // });
+
+
+// GET /images/view/:userId — fetch connection's images
+imageRouter.get('/images/view/:userId', userAuth, async (req, res) => {
+  try {
+    const loggedInUserId = req.user._id;
+    const requestedUserId = req.params.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(requestedUserId)) {
+        return res.status(400).json({
+            error: "Invalid user ID"
+        });
+    }
+    // Make sure the requested user is actually connected
+    const connection = await ConnectionRequestModel.findOne({
+      status: "accepted",
+      $or: [
+        {
+          fromUserId: loggedInUserId,
+          toUserId: requestedUserId
+        },
+        {
+          fromUserId: requestedUserId,
+          toUserId: loggedInUserId
+        }
+      ]
+    });
+
+    if (!connection) {
+      return res.status(403).json({
+        error: "You can only view images of your connections"
+      });
+    }
+
+    const user = await User.findById(requestedUserId).select("images");
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    res.json({
+      images: user.images || []
+    });
+
+  } catch (err) {
+    console.error("Fetch connection images error:", err);
+
+    res.status(500).json({
+      error: "Failed to fetch images"
+    });
+  }
+});
 
 module.exports = imageRouter;
