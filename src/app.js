@@ -15,7 +15,7 @@ const cors = require("cors");
 app.use(cors({
     origin: [
         process.env.CLIENT_URL,
-        "https://dev-tinder-web-one-coral.vercel.app/"
+        "https://dev-tinder-web-one-coral.vercel.app"
     ],
     credentials: true
 }));
