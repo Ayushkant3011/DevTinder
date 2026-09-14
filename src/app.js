@@ -29,6 +29,9 @@ const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
 
 
+app.get("/healthz", (req, res) => {
+    res.status(200).send("DevTinder Backend is running");
+});
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
