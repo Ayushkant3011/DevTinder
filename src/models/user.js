@@ -59,7 +59,14 @@ const userSchema = new mongoose.Schema({
     },
     skills:{
         type: [String]
-    }
+    },
+    images: [
+        {
+            url: { type: String, required: true },
+            publicId: { type: String, required: true },
+            uploadedAt: { type: Date, default: Date.now }
+        }
+    ]
 },
 {
     timestamps: true

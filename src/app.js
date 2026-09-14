@@ -27,7 +27,7 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
-
+const imageRouter = require("./routes/images");
 
 app.get("/healthz", (req, res) => {
     res.status(200).send("DevTinder Backend is running");
@@ -38,7 +38,7 @@ app.use('/', profileRouter);
 app.use('/', requestRouter);
 app.use('/', userRouter);
 app.use('/', paymentRouter);
-
+app.use("/", imageRouter);
 
 const PORT = process.env.PORT || 3011;
 // this is a good way to first connect to db and then listen to server
