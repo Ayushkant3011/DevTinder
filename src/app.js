@@ -1,10 +1,14 @@
 const express = require("express");
 const app = express();
 
+require("dotenv").config({
+    path: `.env.${process.env.NODE_ENV || "development"}`
+});
+console.log(`Environment : ${process.env.NODE_ENV}`);
+
 const {connectDB} = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-require("dotenv").config();
 
 // require("./utils/cronJob");
 
@@ -37,7 +41,7 @@ connectDB()
         console.log("Db Connected Successfully");
 
         app.listen(process.env.PORT, ()=>{
-            console.log("Server is running and listening on 3011......");
+            console.log(`Server is running and listening on ${process.env.PORT}`);
         });
     }).catch((err) =>{
         console.log("DB connection Failed!!!!!");
