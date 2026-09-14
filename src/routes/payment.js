@@ -4,6 +4,9 @@ const paymentRouter = express.Router();
 const razorpayInstance = require("../utils/razorpay");
 const Payment = require("../models/payment");
 const {membershipAmount} = require("../utils/constants");
+const {validateWebhookSignature} = require('razorpay/dist/utils/razorpay-utils')
+
+
 paymentRouter.post("/payment/create", userAuth, async(req,res) =>{
     try{
         const { membershipType } = req.body;
@@ -43,6 +46,26 @@ paymentRouter.post("/payment/create", userAuth, async(req,res) =>{
         console.log(err);
     }
 });
+
+
+// here UserAuth is not required as this api will be called by Razorpay
+paymentRouter.post("/payment/webHook", async(req, res)=>{
+    try{
+        const webHookSignature = req.get["X-Razorpay-Signature"];
+
+        const isWebhookValid = validateWebhookSignature(
+            JSON.stringify(req.body), 
+            webHookSignature, 
+            process.env.RAZORPAY_WEBHOOK_SECRET
+        );
+
+        if(!isWebhookValid) 
+            return res.status(400).json({ message: "Webhook Signature Invalide"});
+    }
+    catch(err){
+        return res.status(500).json({ merssage : err.messsage});
+    }
+})
 
 
 
