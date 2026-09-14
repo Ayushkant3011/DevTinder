@@ -61,6 +61,24 @@ paymentRouter.post("/payment/webHook", async(req, res)=>{
 
         if(!isWebhookValid) 
             return res.status(400).json({ message: "Webhook Signature Invalide"});
+
+
+        // Update payment status in db
+        const paymentDetails = req.body.payload.payment.entity;
+        const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
+        payment.status = paymentDetails.status;
+        await payment.save();
+
+        // Update the user as premium
+        // return success response to razorpay
+        if(req.body.event == "payment.captured"){
+
+        }
+        if(req.body.event == "payment.failed"){
+
+        }
+        
+        return res.status(200).json({message: "Webhook received successfully!"});
     }
     catch(err){
         return res.status(500).json({ merssage : err.messsage});
