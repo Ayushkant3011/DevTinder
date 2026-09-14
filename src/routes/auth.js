@@ -53,9 +53,9 @@ authRouter.post("/login", async (req, res) => {
         const user = await User.findOne({emailId: emailId});
         if(!user) throw new Error ("Invalid Credentials");
 
-        const isPassowordValid = await user.validatePass(password);
+        const isPasswordValid = await user.validatePass(password);
 
-        if(isPassowordValid){
+        if(isPasswordValid){
         
             // create a JWT Token
             const token = await user.getJWT();
@@ -64,6 +64,9 @@ authRouter.post("/login", async (req, res) => {
             // Add the Token to the cookie and send the response back to user
         
             res.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 expires: new Date(Date.now() + 8 * 3600000),
             });
             res.send(user);
@@ -80,6 +83,11 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", async (req, res)=>{
     res
     .cookie("token", null, {
+         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production"
+            ? "none"
+            : "lax",
         expires: new Date(Date.now()),
     })
     .send("Logout Successfull!!!");

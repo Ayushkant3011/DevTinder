@@ -13,7 +13,10 @@ const cors = require("cors");
 // require("./utils/cronJob");
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        process.env.CLIENT_URL,
+        "https://YOUR-VERCEL-FRONTEND.vercel.app"
+    ],
     credentials: true
 }));
 app.use(express.json());
@@ -34,14 +37,14 @@ app.use('/', userRouter);
 app.use('/', paymentRouter);
 
 
-
+const PORT = process.env.PORT || 3011;
 // this is a good way to first connect to db and then listen to server
 connectDB()
     .then(() => {
         console.log("Db Connected Successfully");
 
         app.listen(process.env.PORT, ()=>{
-            console.log(`Server is running and listening on ${process.env.PORT}`);
+            console.log(`Server is running and listening on ${PORT}`);
         });
     }).catch((err) =>{
         console.log("DB connection Failed!!!!!");
