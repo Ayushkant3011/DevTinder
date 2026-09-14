@@ -39,6 +39,13 @@ const userSchema = new mongoose.Schema({
             if(!["male", "female", "others"].includes(value)) throw new Error ("Gender data is not valid");
         }
     },
+    isPremium: {
+        type: Boolean,
+        default: false,
+    },
+    membershipType: {
+        type: String
+    },
     photoUrl:{
         type: String,
         default: "https://png.pngtree.com/png-vector/20250512/ourmid/pngtree-default-avatar-profile-icon-gray-placeholder-vector-png-image_16213764.png",
