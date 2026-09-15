@@ -31,10 +31,10 @@ const initializeSocket = (server) =>{
 
         socket.on(
             "sendMessage", 
-            ({firstName, userId, targetUserId, text })=>{
+            ({firstName, userId, targetUserId, text, photoUrl })=>{
                 const roomId = getSecretRoomId(userId, targetUserId);
                 console.log(firstName + " " + text);
-                io.to(roomId).emit("MessageReceived", { firstName, text});
+                io.to(roomId).emit("MessageReceived", { firstName, text, photoUrl});
 
         });
 
