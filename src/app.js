@@ -9,7 +9,9 @@ console.log(`Environment : ${process.env.NODE_ENV}`);
 const {connectDB} = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const http = require("http");
 
+// this require will work only with AWS SES that this project uses to send emails
 // require("./utils/cronJob");
 
 app.use(cors({
@@ -28,6 +30,8 @@ const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
 const imageRouter = require("./routes/images");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat");
 
 app.get("/healthz", (req, res) => {
     res.status(200).send("DevTinder Backend is running");
@@ -39,14 +43,29 @@ app.use('/', requestRouter);
 app.use('/', userRouter);
 app.use('/', paymentRouter);
 app.use("/", imageRouter);
+app.use("/", chatRouter);
 
+const server = http.createServer(app);
+initializeSocket(server);
 const PORT = process.env.PORT || 3011;
 // this is a good way to first connect to db and then listen to server
+// connectDB()
+//     .then(() => {
+//         console.log("Db Connected Successfully");
+
+//         app.listen(PORT, "0.0.0.0", ()=>{
+//             console.log(`Server is running and listening on ${PORT}`);
+//         });
+//     }).catch((err) =>{
+//         console.log("DB connection Failed!!!!!");
+//     });
+
+// here instead of app.listen use server.listen to configure the socket.io
 connectDB()
     .then(() => {
         console.log("Db Connected Successfully");
 
-        app.listen(PORT, "0.0.0.0", ()=>{
+        server.listen(PORT, "0.0.0.0", ()=>{
             console.log(`Server is running and listening on ${PORT}`);
         });
     }).catch((err) =>{
