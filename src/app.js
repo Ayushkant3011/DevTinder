@@ -31,6 +31,7 @@ const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
 const imageRouter = require("./routes/images");
 const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat");
 
 app.get("/healthz", (req, res) => {
     res.status(200).send("DevTinder Backend is running");
@@ -42,6 +43,7 @@ app.use('/', requestRouter);
 app.use('/', userRouter);
 app.use('/', paymentRouter);
 app.use("/", imageRouter);
+app.use("/", chatRouter);
 
 const server = http.createServer(app);
 initializeSocket(server);
