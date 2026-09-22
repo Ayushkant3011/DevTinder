@@ -24,6 +24,7 @@ const initializeSocket = (server) =>{
         // Handle Events
 
         socket.on("joinChat", ({firstName, userId, targetUserId})=>{
+            console.log("Chat CONNECTED")
             const roomId = getSecretRoomId(userId, targetUserId);
             
             console.log(firstName + " Joined room :" + roomId);
