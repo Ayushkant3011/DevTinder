@@ -9,7 +9,7 @@ const messageSchema = new mongoose.Schema(
         },
         text:{
             type: String,
-            require: true,
+            required: true,
         }
     }, 
     {timestamps: true}
