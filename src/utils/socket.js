@@ -24,7 +24,6 @@ const initializeSocket = (server) =>{
         // Handle Events
 
         socket.on("joinChat", ({firstName, userId, targetUserId})=>{
-            console.log("Chat CONNECTED")
             const roomId = getSecretRoomId(userId, targetUserId);
             
             console.log(firstName + " Joined room :" + roomId);
@@ -37,11 +36,6 @@ const initializeSocket = (server) =>{
             async ({firstName, lastName, userId, targetUserId, text, photoUrl })=>{
                 
                 try{
-
-                    console.log("========== SEND MESSAGE ==========");
-                    console.log("userId:", userId);
-                    console.log("targetUserId:", targetUserId);
-                    console.log("text:", text);
                     const roomId = getSecretRoomId(userId, targetUserId);
                     
                     console.log(firstName + " " + text);
@@ -54,7 +48,7 @@ const initializeSocket = (server) =>{
                     let chat = await Chat.findOne({
                         participants: { $all: [userId, targetUserId] },
                     });
-                    console.log("Existing chat:", chat);
+
                     if(!chat) {
                         chat = new Chat({
                             participants: [userId, targetUserId],
@@ -66,10 +60,9 @@ const initializeSocket = (server) =>{
                         senderId: userId,
                         text,
                     });
-                    console.log("Message pushed:", chat.messages);
 
                     await chat.save();
-                    console.log("✅ Chat saved successfully");
+
                     const savedMessage = chat.messages[chat.messages.length - 1];
 
                     io.to(roomId).emit("MessageReceived", {
@@ -80,7 +73,6 @@ const initializeSocket = (server) =>{
                         photoUrl,
                         createdAt: savedMessage.createdAt,
                     });
-                    console.log("✅ Message emitted");
                 }
                 catch(err){
                     console.log(err);
